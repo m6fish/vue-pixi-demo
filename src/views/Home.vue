@@ -22,6 +22,11 @@ export default {
     methods: {
         init () {
             console.log('Hello Pixi')
+            // 讓chrome pixi devTool出現
+            if (process.env.NODE_ENV === 'development') {
+                window.PIXI = PIXI
+            }
+
             this.app = new PIXI.Application({
                 width: 800,
                 height: 600
