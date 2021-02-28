@@ -42,28 +42,40 @@ export default {
             this.$refs.gameContainer.appendChild(this.app.view)
 
             // load the texture we need
-            this.app.loader.add('logo', logo).load((loader, resources) => {
-                console.log(resources)
-                // This creates a texture from a 'logo.png' image
-                const logo = new PIXI.Sprite(resources.logo.texture)
+            const picName = 'logo'
+            this.app.loader.add(picName, logo)
+                .load((loader, resources) => {
+                    // This creates a texture from a 'logo.png' image
+                    const logoSprite = new PIXI.Sprite(resources[picName].texture)
 
-                // Setup the position of the logo
-                logo.x = this.app.renderer.width / 2
-                logo.y = this.app.renderer.height / 2
+                    // Setup the position of the logo
+                    logoSprite.x = this.app.renderer.width / 2
+                    logoSprite.y = this.app.renderer.height / 2
 
-                // Rotate around the center
-                logo.anchor.x = 0.5
-                logo.anchor.y = 0.5
+                    // Rotate around the center
+                    logoSprite.anchor.x = 0.5
+                    logoSprite.anchor.y = 0.5
 
-                // Add the logo to the scene we are building
-                this.app.stage.addChild(logo)
+                    // Add the logo to the scene we are building
+                    this.app.stage.addChild(logoSprite)
 
-                // Listen for frame updates
-                this.app.ticker.add(() => {
+                    // Listen for frame updates
+                    this.app.ticker.add(() => {
                     // each frame we spin the logo around a bit
-                    logo.rotation += 0.01
+                        logoSprite.rotation += 0.01
+                    })
                 })
-            })
+                .onProgress.add((loader, resource) => {
+                    // Display the file `url` currently being loaded
+                    console.log('loading: ' + resource.url)
+
+                    // Display the percentage of files currently loaded
+                    console.log('progress: ' + loader.progress + '%')
+
+                    // If you gave your files names as the first argument
+                    // of the `add` method, you can access them like this
+                    console.log('loading: ' + resource.name)
+                })
         }
     }
 }
