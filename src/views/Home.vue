@@ -30,9 +30,15 @@ export default {
             this.app = new PIXI.Application({
                 width: 800,
                 height: 600
-                // antialias: true,
-                // resolution: this.devicePixelRatio
+                // transparent: true // 背景透明
             })
+
+            // 展開全螢幕
+            this.app.renderer.view.style.position = 'absolute'
+            this.app.renderer.view.style.display = 'block'
+            this.app.renderer.autoResize = true
+            this.app.renderer.resize(window.innerWidth, window.innerHeight)
+
             this.$refs.gameContainer.appendChild(this.app.view)
 
             // load the texture we need
