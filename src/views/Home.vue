@@ -13,7 +13,8 @@ export default {
     name: 'Home',
     data () {
         return {
-            app: null
+            app: null,
+            theSprite: null
         }
     },
     mounted () {
@@ -47,6 +48,7 @@ export default {
                 .load((loader, resources) => {
                     // This creates a texture from a 'logo.png' image
                     const logoSprite = new PIXI.Sprite(resources[picName].texture)
+                    this.theSprite = logoSprite
 
                     // Setup the position of the logo
                     logoSprite.x = this.app.renderer.width / 2
@@ -56,26 +58,46 @@ export default {
                     logoSprite.anchor.x = 0.5
                     logoSprite.anchor.y = 0.5
 
+                    // move
+                    logoSprite.vx = 0
+                    logoSprite.vy = 0
+
                     // Add the logo to the scene we are building
                     this.app.stage.addChild(logoSprite)
 
                     // Listen for frame updates
-                    this.app.ticker.add(() => {
-                    // each frame we spin the logo around a bit
-                        logoSprite.rotation += 0.01
-                    })
+                    this.app.ticker.add(this.gameLoop)
                 })
-                .onProgress.add((loader, resource) => {
-                    // Display the file `url` currently being loaded
-                    console.log('loading: ' + resource.url)
+                .onProgress.add(this.gameProgress)
+        },
+        gameLoop (delta) {
+            // each frame we spin the logo around a bit
+            this.theSprite.rotation += 0.01
 
-                    // Display the percentage of files currently loaded
-                    console.log('progress: ' + loader.progress + '%')
+            if (this.theSprite.vx === 0) {
+                this.theSprite.vx = 1
+                this.theSprite.vy = 1
+            } else if (this.theSprite.vx === 1 && this.theSprite.x > 800) {
+                this.theSprite.vx = -1
+                this.theSprite.vy = -1
+            } else if (this.theSprite.vx === -1 && this.theSprite.x < 500) {
+                this.theSprite.vx = 1
+                this.theSprite.vy = 1
+            }
 
-                    // If you gave your files names as the first argument
-                    // of the `add` method, you can access them like this
-                    console.log('loading: ' + resource.name)
-                })
+            this.theSprite.x += this.theSprite.vx
+            this.theSprite.y += this.theSprite.vy
+        },
+        gameProgress (loader, resource) {
+            // Display the file `url` currently being loaded
+            console.log('loading: ' + resource.url)
+
+            // Display the percentage of files currently loaded
+            console.log('progress: ' + loader.progress + '%')
+
+            // If you gave your files names as the first argument
+            // of the `add` method, you can access them like this
+            console.log('loading: ' + resource.name)
         }
     }
 }
