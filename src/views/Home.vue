@@ -14,7 +14,8 @@ export default {
     data () {
         return {
             app: null,
-            theSprite: null
+            theSprite: null,
+            message: null
         }
     },
     mounted () {
@@ -69,6 +70,32 @@ export default {
                     this.app.ticker.add(this.gameLoop)
                 })
                 .onProgress.add(this.gameProgress)
+
+            // ellipse
+            const ellipse = new PIXI.Graphics()
+            ellipse.beginFill(0xFFFF00)
+            ellipse.drawEllipse(0, 0, 50, 20)
+            ellipse.endFill()
+            ellipse.x = 180
+            ellipse.y = 130
+
+            this.app.stage.addChild(ellipse)
+
+            // text
+            const message = new PIXI.Text('Hello Pixi!', new PIXI.TextStyle({
+                fontFamily: 'Arial',
+                fontSize: 36,
+                fill: 'white',
+                stroke: '#ff3300',
+                strokeThickness: 4,
+                dropShadow: true,
+                dropShadowColor: '#000000',
+                dropShadowBlur: 4,
+                dropShadowAngle: Math.PI / 6,
+                dropShadowDistance: 6
+            }))
+            this.message = message
+            this.app.stage.addChild(message)
         },
         gameLoop (delta) {
             // each frame we spin the logo around a bit
@@ -80,9 +107,11 @@ export default {
             } else if (this.theSprite.vx === 1 && this.theSprite.x > 800) {
                 this.theSprite.vx = -1
                 this.theSprite.vy = -1
+                this.message.style = { fill: 'white' }
             } else if (this.theSprite.vx === -1 && this.theSprite.x < 500) {
                 this.theSprite.vx = 1
                 this.theSprite.vy = 1
+                this.message.style = { fill: 'red' }
             }
 
             this.theSprite.x += this.theSprite.vx
