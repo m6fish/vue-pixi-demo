@@ -43,7 +43,14 @@ export default {
 
             let triangle = new PIXI.Graphics();
 
-            triangle.beginFill(0x006DDD)
+            triangle.beginTextureFill({ texture: this.gradientBg({
+                colorArr: ['#fff','#CB2929','#800505', '#000'],
+                // stepArr: [0, 0.2, 0.8, 1],
+                width: 100,
+                height: 300
+            })})
+
+            // triangle.beginFill(0x006DDD)
             triangle.moveTo(0,0)
             triangle.lineTo(0, 300);
             triangle.lineTo(150, 300);
