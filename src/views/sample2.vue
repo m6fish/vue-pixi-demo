@@ -59,9 +59,21 @@ export default {
                 width: 34,
                 height: 67
             }))
-
-
+            sprite1.x = 200
+            sprite1.y = 200
             this.app.stage.addChild(sprite1)
+
+
+            // 輻射漸層
+            const sprite2 = new PIXI.Sprite(this.radialBg({
+                colorArr: ['#fff','#CB2929','#800505', '#000'],
+                // stepArr: [0, 0.2, 0.8, 1],
+                width: 200,
+                height: 200
+            }))
+            sprite2.x = 400
+            sprite2.y = 200
+            this.app.stage.addChild(sprite2)
         },
         /**
          * 繪製單向漸層
@@ -81,14 +93,32 @@ export default {
 
             colorArr.forEach((rawColor, idx) => {
                 const step = stepArr[idx] || (1 / (colorArr.length -1) ) * idx
-                console.log(step)
                 grd.addColorStop(step, rawColor); 
             })
 
             ctx.fillStyle = grd;
             ctx.fillRect(0, 0, width, height);
             return new PIXI.Texture.from(canvas);
-        },       
+        },
+        // 繪製輻射漸層
+        radialBg({colorArr, stepArr = [], width, height}) {
+            const canvas = document.createElement("canvas");
+            canvas.setAttribute("width", width);
+            canvas.setAttribute("height", height);
+
+            const ctx = canvas.getContext("2d");
+            const half = 0.5 * height
+            const grd = ctx.createRadialGradient(half, half, half, half, half, 0);
+
+            colorArr.forEach((rawColor, idx) => {
+                const step = stepArr[idx] || (1 / (colorArr.length -1) ) * idx
+                grd.addColorStop(step, rawColor); 
+            })
+
+            ctx.fillStyle = grd;
+            ctx.fillRect(0, 0, width, height);
+            return new PIXI.Texture.from(canvas);
+        }
     }
 }
 </script>
