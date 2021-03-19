@@ -112,8 +112,8 @@ export default {
         },
         /**
          * 繪製單向漸層
-         * @param {Array} param.colorArr required, 漸層顏色
-         * @param {Array} param.stepArr optional, 漸層自定義step, 未提供使用平均區間
+         * @param {Array} param.colorArr required, 漸層顏色，由外而內
+         * @param {Array} param.stepArr optional, 漸層自定義step，未提供則使用平均區間
          * @param {Number} param.width required, 寬度
          * @param {Number} param.height required, 高度
          * @returns PIXI.Texture
@@ -137,8 +137,8 @@ export default {
         },
         /**
          * 繪製輻射漸層
-         * @param {Array} param.colorArr required, 漸層顏色
-         * @param {Array} param.stepArr optional, 漸層自定義step, 未提供使用平均區間
+         * @param {Array} param.colorArr required, 漸層顏色，由外而內
+         * @param {Array} param.stepArr optional, 漸層自定義step，未提供則使用平均區間
          * @param {Number} param.width required, 寬度
          * @param {Number} param.height required, 高度
          * @returns PIXI.Texture
