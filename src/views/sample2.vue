@@ -169,6 +169,8 @@ export default {
          * @param {Number} param.beginY required, 起點Y座標
          */
         drawRadiaRoundRect({colorArr, stepArr, width: w, height: h, radius: r, borderLength = 2, beginX, beginY}) {
+            const contaniner = new PIXI.Container();
+
             // 輻射漸層
             const radialBg = this.radialBg({ 
                 colorArr,
@@ -176,24 +178,25 @@ export default {
                 width: w - r*0.60,
                 height: h - r*0.60
             })
-            const sprite = new PIXI.Sprite(radialBg)
-            sprite.x = beginX + r*0.32
-            sprite.y = beginY + r*0.32
+            const bg = new PIXI.Sprite(radialBg)
+            bg.x = beginX + r*0.32
+            bg.y = beginY + r*0.32
+            contaniner.addChild(bg)
 
-            // 加入圓角矩形
-            let roundedRect = new PIXI.Graphics();
-            roundedRect.addChild(sprite)
-            
             // 填充線
+            const paddingline = new PIXI.Graphics();
             const delta = 3 * borderLength / 2 // 偏移量
-            roundedRect.lineStyle(3*borderLength, colorArr[0].replace('#', '0x'), 1);
-            roundedRect.drawRoundedRect(beginX + delta, beginY + delta, w - 2 * delta, h - 2 * delta, r * 0.7 );
+            paddingline.lineStyle(3*borderLength, colorArr[0].replace('#', '0x'), 1);
+            paddingline.drawRoundedRect(beginX + delta, beginY + delta, w - 2 * delta, h - 2 * delta, r * 0.7 );
+            contaniner.addChild(paddingline)
 
             // 框線
-            roundedRect.lineStyle(borderLength, 0xFFFFFF, 1);
-            roundedRect.drawRoundedRect(beginX, beginY, w, h, r);
-            roundedRect.endFill();
-            return roundedRect
+            const line = new PIXI.Graphics();
+            line.lineStyle(borderLength, 0xFFFFFF, 1);
+            line.drawRoundedRect(beginX, beginY, w, h, r);
+            contaniner.addChild(line)
+
+            return contaniner
         },
         /**
          * 繪製圓角輻射矩形-使用遮罩
