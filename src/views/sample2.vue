@@ -69,36 +69,11 @@ export default {
             sprite1.x = 200
             sprite1.y = 200
             this.app.stage.addChild(sprite1)
-
-
-            // 輻射漸層
-            const radialBg = this.radialBg({
-                colorArr: ['#95761C','#E0D497','#E6DFB2', '#FFFFF0'],
-                stepArr: [0, 0.34, 0.58, 1],
-                width: 590,
-                height: 290
-            })
-
-            // 參考圖
-            const sprite2 = new PIXI.Sprite(radialBg)
-            sprite2.x = 400 +5
-            sprite2.y = 400 +5
-
-            // 加入圓角矩形
-            const [beginX, beginY, borderLength, radius] = [400,400, 2, 10]
-            let roundedRect = new PIXI.Graphics();
-            roundedRect.addChild(sprite2)
-            roundedRect.lineStyle(borderLength, 0xFFFFFF, 1);
-            roundedRect.drawRoundedRect(beginX, beginY, 600, 300, radius);
-            roundedRect.lineStyle(2*borderLength, 0x95761C, 1);
-            const delta = 3*borderLength/2
-            roundedRect.drawRoundedRect(beginX + delta, beginY + delta, 600 - 2 * delta, 300 - 2 * delta, radius / 2);
-            roundedRect.endFill();
-            this.app.stage.addChild(roundedRect)
+            
 
             // 圓角矩形輻射
-            const sp3 = this.drawRadiaRoundRect({
-                colorArr: ['#95761C','#585858'],
+            const sp = this.drawRadiaRoundRect({
+                colorArr: ['#95761C','#E0D497','#E6DFB2', '#FFFFF0'],
                 // stepArr,
                 width: 60*12,
                 height: 26*12,
@@ -107,8 +82,20 @@ export default {
                 beginX: 400,
                 beginY: 20
             })
-            this.app.stage.addChild(sp3)
+            this.app.stage.addChild(sp)
 
+            // 圓角矩形輻射-遮罩
+            const sp2 = this.drawRadiaRoundRect2({
+                colorArr: ['#95761C','#E0D497','#E6DFB2', '#FFFFF0'],
+                // stepArr,
+                width: 60*12,
+                height: 26*12,
+                radius: 20,
+                borderLength: 2,
+                beginX: 400,
+                beginY: 500
+            })
+            this.app.stage.addChild(sp2)
         },
         /**
          * 繪製單向漸層
@@ -207,6 +194,48 @@ export default {
             roundedRect.drawRoundedRect(beginX, beginY, w, h, r);
             roundedRect.endFill();
             return roundedRect
+        },
+        /**
+         * 繪製圓角輻射矩形-使用遮罩
+         * @param {Array} param.colorArr required, 漸層顏色，由外而內
+         * @param {Array} param.stepArr optional, 漸層自定義step，未提供則使用平均區間
+         * @param {Number} param.width required, 寬度
+         * @param {Number} param.height required, 高度
+         * @param {Number} param.radius required, 矩形圓角
+         * @param {Number} param.borderLength required, 框線寬度
+         * @param {Number} param.beginX required, 起點X座標
+         * @param {Number} param.beginY required, 起點Y座標
+         */
+        drawRadiaRoundRect2({colorArr, stepArr, width: w, height: h, radius: r, borderLength = 2, beginX, beginY}) {
+            const contaniner = new PIXI.Container();
+
+            // 輻射漸層
+            const radialBg = this.radialBg({ 
+                colorArr,
+                stepArr,
+                width: w,
+                height: h
+            })
+            const bg = new PIXI.Sprite(radialBg)
+            bg.x = beginX
+            bg.y = beginY
+            contaniner.addChild(bg)
+
+            // 框線
+            const line = new PIXI.Graphics();
+            line.lineStyle(borderLength, 0xFFFFFF, 1, 0);
+            line.drawRoundedRect(beginX, beginY, w, h, r);
+            contaniner.addChild(line)
+
+            // 遮罩
+            const mask = new PIXI.Graphics();
+            mask.beginFill(4, 0xFFFFFF)
+            mask.drawRoundedRect(beginX, beginY, w, h, r);
+            mask.endFill();
+            bg.mask = mask
+            contaniner.addChild(mask)
+            
+            return contaniner
         }
     }
 }
