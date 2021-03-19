@@ -95,6 +95,20 @@ export default {
             roundedRect.drawRoundedRect(beginX + delta, beginY + delta, 600 - 2 * delta, 300 - 2 * delta, radius / 2);
             roundedRect.endFill();
             this.app.stage.addChild(roundedRect)
+
+            // 圓角矩形輻射
+            const sp3 = this.drawRadiaRoundRect({
+                colorArr: ['#95761C','#585858'],
+                // stepArr,
+                width: 60*12,
+                height: 26*12,
+                radius: 20,
+                borderLength: 2,
+                beginX: 400,
+                beginY: 20
+            })
+            this.app.stage.addChild(sp3)
+
         },
         /**
          * 繪製單向漸層
@@ -156,6 +170,43 @@ export default {
             ctx.fillRect(0, 0, Math.max(width, height), Math.max(width, height));
             return new PIXI.Texture.from(canvas)
         },
+        /**
+         * 繪製圓角輻射矩形
+         * @param {Array} param.colorArr required, 漸層顏色，由外而內
+         * @param {Array} param.stepArr optional, 漸層自定義step，未提供則使用平均區間
+         * @param {Number} param.width required, 寬度
+         * @param {Number} param.height required, 高度
+         * @param {Number} param.radius required, 矩形圓角
+         * @param {Number} param.borderLength required, 框線寬度
+         * @param {Number} param.beginX required, 起點X座標
+         * @param {Number} param.beginY required, 起點Y座標
+         */
+        drawRadiaRoundRect({colorArr, stepArr, width: w, height: h, radius: r, borderLength = 2, beginX, beginY}) {
+            // 輻射漸層
+            const radialBg = this.radialBg({ 
+                colorArr,
+                stepArr,
+                width: w - r*0.60,
+                height: h - r*0.60
+            })
+            const sprite = new PIXI.Sprite(radialBg)
+            sprite.x = beginX + r*0.32
+            sprite.y = beginY + r*0.32
+
+            // 加入圓角矩形
+            let roundedRect = new PIXI.Graphics();
+            roundedRect.addChild(sprite)
+            
+            // 填充線
+            const delta = 3 * borderLength / 2 // 偏移量
+            roundedRect.lineStyle(3*borderLength, colorArr[0].replace('#', '0x'), 1);
+            roundedRect.drawRoundedRect(beginX + delta, beginY + delta, w - 2 * delta, h - 2 * delta, r * 0.7 );
+
+            // 框線
+            roundedRect.lineStyle(borderLength, 0xFFFFFF, 1);
+            roundedRect.drawRoundedRect(beginX, beginY, w, h, r);
+            roundedRect.endFill();
+            return roundedRect
         }
     }
 }
