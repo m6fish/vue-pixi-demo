@@ -19,6 +19,11 @@ const routes = [
         path: '/kaleidoscope',
         name: 'kaleidoscope',
         component: () => import(/* webpackChunkName: "kaleidoscope" */ '../views/kaleidoscope.vue')
+    },
+    {
+        path: '/SHM',
+        name: 'SHM',
+        component: () => import(/* webpackChunkName: "SHM" */ '../views/SHM.vue')
     }
 ]
 
