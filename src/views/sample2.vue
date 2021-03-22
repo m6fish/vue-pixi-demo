@@ -9,7 +9,7 @@ import * as PIXI from 'pixi.js'
 // import bunny from '@/assets/bunny.png'
 
 export default {
-    name: "sample2",
+    name: 'sample2',
     data () {
         return {
             app: null
@@ -42,26 +42,27 @@ export default {
             // this.app.loader.add('bunny', logo)
 
             // 三角形
-            let triangle = new PIXI.Graphics();
-            triangle.beginTextureFill({ texture: this.gradientBg({
-                colorArr: ['#fff','#CB2929','#800505', '#000'],
-                // stepArr: [0, 0.2, 0.8, 1],
-                width: 100,
-                height: 300
-            })})
+            const triangle = new PIXI.Graphics()
+            triangle.beginTextureFill({
+                texture: this.gradientBg({
+                    colorArr: ['#fff', '#CB2929', '#800505', '#000'],
+                    // stepArr: [0, 0.2, 0.8, 1],
+                    width: 100,
+                    height: 300
+                })
+            })
 
             // triangle.beginFill(0x006DDD)
-            triangle.moveTo(0,0)
-            triangle.lineTo(0, 300);
-            triangle.lineTo(150, 300);
-            triangle.lineTo(0, 0);
-            triangle.endFill();
+            triangle.moveTo(0, 0)
+            triangle.lineTo(0, 300)
+            triangle.lineTo(150, 300)
+            triangle.lineTo(0, 0)
+            triangle.endFill()
             this.app.stage.addChild(triangle)
-
 
             // 單向漸層
             const sprite1 = new PIXI.Sprite(this.gradientBg({
-                colorArr: ['#fff','#CB2929','#800505', '#000'],
+                colorArr: ['#fff', '#CB2929', '#800505', '#000'],
                 // stepArr: [0, 0.2, 0.8, 1],
                 width: 34,
                 height: 67
@@ -69,14 +70,13 @@ export default {
             sprite1.x = 200
             sprite1.y = 200
             this.app.stage.addChild(sprite1)
-            
 
             // 圓角矩形輻射
             const sp = this.drawRadiaRoundRect({
-                colorArr: ['#95761C','#E0D497','#E6DFB2', '#FFFFF0'],
+                colorArr: ['#95761C', '#E0D497', '#E6DFB2', '#FFFFF0'],
                 // stepArr,
-                width: 60*12,
-                height: 26*12,
+                width: 60 * 12,
+                height: 26 * 12,
                 radius: 20,
                 borderLength: 2,
                 beginX: 400,
@@ -86,10 +86,10 @@ export default {
 
             // 圓角矩形輻射-遮罩
             const sp2 = this.drawRadiaRoundRect2({
-                colorArr: ['#95761C','#E0D497','#E6DFB2', '#FFFFF0'],
+                colorArr: ['#95761C', '#E0D497', '#E6DFB2', '#FFFFF0'],
                 // stepArr,
-                width: 60*12,
-                height: 26*12,
+                width: 60 * 12,
+                height: 26 * 12,
                 radius: 20,
                 borderLength: 2,
                 beginX: 400,
@@ -105,22 +105,22 @@ export default {
          * @param {Number} param.height required, 高度
          * @returns PIXI.Texture
          */
-        gradientBg({colorArr, stepArr = [], width, height}){
-            const canvas = document.createElement("canvas");
-            canvas.setAttribute("width", width);
-            canvas.setAttribute("height", height);
+        gradientBg ({ colorArr, stepArr = [], width, height }) {
+            const canvas = document.createElement('canvas')
+            canvas.setAttribute('width', width)
+            canvas.setAttribute('height', height)
 
-            const ctx = canvas.getContext("2d");
-            const grd = ctx.createLinearGradient(0, 0, 0, height);
+            const ctx = canvas.getContext('2d')
+            const grd = ctx.createLinearGradient(0, 0, 0, height)
 
             colorArr.forEach((rawColor, idx) => {
-                const step = stepArr[idx] || (1 / (colorArr.length -1) ) * idx
-                grd.addColorStop(step, rawColor); 
+                const step = stepArr[idx] || (1 / (colorArr.length - 1)) * idx
+                grd.addColorStop(step, rawColor)
             })
 
-            ctx.fillStyle = grd;
-            ctx.fillRect(0, 0, width, height);
-            return new PIXI.Texture.from(canvas);
+            ctx.fillStyle = grd
+            ctx.fillRect(0, 0, width, height)
+            return new PIXI.Texture.from(canvas)
         },
         /**
          * 繪製輻射漸層
@@ -130,31 +130,31 @@ export default {
          * @param {Number} param.height required, 高度
          * @returns PIXI.Texture
          */
-        radialBg({colorArr, stepArr = [], width, height}) {
-            const canvas = document.createElement("canvas");
+        radialBg ({ colorArr, stepArr = [], width, height }) {
+            const canvas = document.createElement('canvas')
             const maxRadius = Math.max(width, height)
-            canvas.setAttribute("width", maxRadius);
-            canvas.setAttribute("height", maxRadius);
+            canvas.setAttribute('width', maxRadius)
+            canvas.setAttribute('height', maxRadius)
 
-            const ctx = canvas.getContext("2d");
+            const ctx = canvas.getContext('2d')
             const maxhalf = 0.5 * maxRadius
-            const grd = ctx.createRadialGradient(maxhalf, maxhalf, maxhalf, maxhalf, maxhalf, 0);
+            const grd = ctx.createRadialGradient(maxhalf, maxhalf, maxhalf, maxhalf, maxhalf, 0)
 
             colorArr.forEach((rawColor, idx) => {
-                const step = stepArr[idx] || (1 / (colorArr.length -1) ) * idx
-                grd.addColorStop(step, rawColor); 
+                const step = stepArr[idx] || (1 / (colorArr.length - 1)) * idx
+                grd.addColorStop(step, rawColor)
             })
 
-            let [scaleX, scaleY] = [1,1]
-            if(width >= height) {
+            let [scaleX, scaleY] = [1, 1]
+            if (width >= height) {
                 scaleY = height / width
             } else {
                 scaleX = width / height
             }
 
-            ctx.fillStyle = grd;
-            ctx.setTransform(scaleX,0,0,scaleY,0,0);
-            ctx.fillRect(0, 0, Math.max(width, height), Math.max(width, height));
+            ctx.fillStyle = grd
+            ctx.setTransform(scaleX, 0, 0, scaleY, 0, 0)
+            ctx.fillRect(0, 0, Math.max(width, height), Math.max(width, height))
             return new PIXI.Texture.from(canvas)
         },
         /**
@@ -168,32 +168,32 @@ export default {
          * @param {Number} param.beginX required, 起點X座標
          * @param {Number} param.beginY required, 起點Y座標
          */
-        drawRadiaRoundRect({colorArr, stepArr, width: w, height: h, radius: r, borderLength = 2, beginX, beginY}) {
-            const contaniner = new PIXI.Container();
+        drawRadiaRoundRect ({ colorArr, stepArr, width: w, height: h, radius: r, borderLength = 2, beginX, beginY }) {
+            const contaniner = new PIXI.Container()
 
             // 輻射漸層
-            const radialBg = this.radialBg({ 
+            const radialBg = this.radialBg({
                 colorArr,
                 stepArr,
-                width: w - r*0.60,
-                height: h - r*0.60
+                width: w - r * 0.60,
+                height: h - r * 0.60
             })
             const bg = new PIXI.Sprite(radialBg)
-            bg.x = beginX + r*0.32
-            bg.y = beginY + r*0.32
+            bg.x = beginX + r * 0.32
+            bg.y = beginY + r * 0.32
             contaniner.addChild(bg)
 
             // 填充線
-            const paddingline = new PIXI.Graphics();
+            const paddingline = new PIXI.Graphics()
             const delta = 3 * borderLength / 2 // 偏移量
-            paddingline.lineStyle(3*borderLength, colorArr[0].replace('#', '0x'), 1);
-            paddingline.drawRoundedRect(beginX + delta, beginY + delta, w - 2 * delta, h - 2 * delta, r * 0.7 );
+            paddingline.lineStyle(3 * borderLength, colorArr[0].replace('#', '0x'), 1)
+            paddingline.drawRoundedRect(beginX + delta, beginY + delta, w - 2 * delta, h - 2 * delta, r * 0.7)
             contaniner.addChild(paddingline)
 
             // 框線
-            const line = new PIXI.Graphics();
-            line.lineStyle(borderLength, 0xFFFFFF, 1);
-            line.drawRoundedRect(beginX, beginY, w, h, r);
+            const line = new PIXI.Graphics()
+            line.lineStyle(borderLength, 0xFFFFFF, 1)
+            line.drawRoundedRect(beginX, beginY, w, h, r)
             contaniner.addChild(line)
 
             return contaniner
@@ -209,11 +209,11 @@ export default {
          * @param {Number} param.beginX required, 起點X座標
          * @param {Number} param.beginY required, 起點Y座標
          */
-        drawRadiaRoundRect2({colorArr, stepArr, width: w, height: h, radius: r, borderLength = 2, beginX, beginY}) {
-            const contaniner = new PIXI.Container();
+        drawRadiaRoundRect2 ({ colorArr, stepArr, width: w, height: h, radius: r, borderLength = 2, beginX, beginY }) {
+            const contaniner = new PIXI.Container()
 
             // 輻射漸層
-            const radialBg = this.radialBg({ 
+            const radialBg = this.radialBg({
                 colorArr,
                 stepArr,
                 width: w,
@@ -225,19 +225,19 @@ export default {
             contaniner.addChild(bg)
 
             // 框線
-            const line = new PIXI.Graphics();
-            line.lineStyle(borderLength, 0xFFFFFF, 1, 0);
-            line.drawRoundedRect(beginX, beginY, w, h, r);
+            const line = new PIXI.Graphics()
+            line.lineStyle(borderLength, 0xFFFFFF, 1, 0)
+            line.drawRoundedRect(beginX, beginY, w, h, r)
             contaniner.addChild(line)
 
             // 遮罩
-            const mask = new PIXI.Graphics();
+            const mask = new PIXI.Graphics()
             mask.beginFill(4, 0xFFFFFF)
-            mask.drawRoundedRect(beginX, beginY, w, h, r);
-            mask.endFill();
+            mask.drawRoundedRect(beginX, beginY, w, h, r)
+            mask.endFill()
             bg.mask = mask
             contaniner.addChild(mask)
-            
+
             return contaniner
         }
     }
