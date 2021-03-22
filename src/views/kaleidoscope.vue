@@ -13,7 +13,10 @@ export default {
     data () {
         return {
             app: null,
-            loader: null
+            loader: null,
+            bunnyArr: [],
+            degree: 0,
+            mainContainer: null
         }
     },
     mounted () {
@@ -48,6 +51,7 @@ export default {
     methods: {
         init () {
             this.app.stage.addChild(this.drawMain())
+            this.app.ticker.add(this.gameLoop)
         },
         drawMain () {
             const container = new PIXI.Container()
@@ -72,8 +76,9 @@ export default {
                 // 兔子
                 const bunnyPic = new PIXI.Sprite(this.loader.resources.bunny.texture)
                 bunnyPic.x = 0.5 * (r - bunnyPic.width)
-                bunnyPic.y = -22
+                bunnyPic.y = 0
                 cardContainer.addChild(bunnyPic)
+                this.bunnyArr.push(bunnyPic)
 
                 // 兔子遮罩
                 const bunnyMask = triangle.clone()
@@ -89,7 +94,19 @@ export default {
                 container.addChild(cardContainer)
             }
 
+            this.mainContainer = container
             return container
+        },
+        gameLoop (delta) {
+            this.degree = this.degree > 359 ? 1 : this.degree + 1
+
+            this.bunnyArr.forEach((oneBunny, idx) => {
+                const PADDING = 30
+                const arc = (this.degree + (idx * 30)) * (Math.PI / 180) // SHM
+                oneBunny.y = oneBunny.height * Math.sin(arc) - PADDING
+            })
+
+            this.mainContainer.rotation += 0.005
         }
     }
 }
