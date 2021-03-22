@@ -6,7 +6,6 @@
 
 <script>
 import * as PIXI from 'pixi.js'
-// import bunny from '@/assets/bunny.png'
 
 export default {
     name: 'sample2',
@@ -38,8 +37,6 @@ export default {
             this.app.renderer.resize(window.innerWidth, window.innerHeight)
 
             this.$refs.sample2.appendChild(this.app.view)
-
-            // this.app.loader.add('bunny', logo)
 
             // 三角形
             const triangle = new PIXI.Graphics()
