@@ -24,6 +24,11 @@ const routes = [
         path: '/SHM',
         name: 'SHM',
         component: () => import(/* webpackChunkName: "SHM" */ '../views/SHM.vue')
+    },
+    {
+        path: '/gsap',
+        name: 'gsap',
+        component: () => import(/* webpackChunkName: "gsap" */ '../views/GSAP.vue')
     }
 ]
 

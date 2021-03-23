@@ -5,6 +5,7 @@
         <router-link to="/">Rect</router-link> |
         <router-link to="/kaleidoscope">kaleidoscope</router-link> |
         <router-link to="/shm">SHM</router-link> |
+        <router-link to="/gsap">GSAP</router-link> |
     </div>
     <router-view/>
   </div>
