@@ -106,7 +106,7 @@ export default {
                 oneBunny.y = oneBunny.height * Math.sin(arc) - PADDING
             })
 
-            this.mainContainer.rotation += 0.005
+            this.mainContainer.rotation += 0.003
         }
     }
 }
