@@ -7,14 +7,16 @@
 <script>
 import * as PIXI from 'pixi.js'
 import { gsap } from 'gsap'
+import { radialBg } from '@/utils'
 
 export default {
     name: 'gsap',
     data () {
         return {
             app: null,
-            RADIUS: 300,
-            LINE_NUM: 3
+            RADIUS: 100,
+            LINE_NUM: 3,
+            lightOn: false // 燈開關
         }
     },
     mounted () {
@@ -27,7 +29,6 @@ export default {
         this.app = new PIXI.Application({
             width: 800,
             height: 600
-            // transparent: true // 背景透明
         })
 
         // 展開全螢幕
@@ -42,12 +43,12 @@ export default {
     methods: {
         init () {
             this.app.stage.addChild(this.drawMain())
-            // this.app.ticker.add(this.gameLoop)
+            this.app.stage.addChild(this.drawShine())
         },
         drawMain () {
             const container = new PIXI.Container()
-            container.x = 500
-            container.y = 300
+            container.x = 200
+            container.y = 200
             const angle = Math.PI / this.LINE_NUM
 
             for (let i = 0; i < this.LINE_NUM; i++) {
@@ -69,13 +70,13 @@ export default {
                 gsap.to(line, { duration: 2, pixi: { lineColor: 'purple' } })
 
                 // 球擺動
-                const tl = gsap.timeline({ repeat: 2 })
+                const tl = gsap.timeline({ repeat: -1 })
                 tl.to(ball, {
                     ease: 'power2.out',
                     pixi: {
-                        x: 300,
-                        scaleX: 3,
-                        scaleY: 3
+                        x: this.RADIUS,
+                        scaleX: 2,
+                        scaleY: 2
                     },
                     duration: 1
                 }).to(ball, {
@@ -89,9 +90,9 @@ export default {
                 }).to(ball, {
                     ease: 'power2.out',
                     pixi: {
-                        x: -300,
-                        scaleX: 3,
-                        scaleY: 3
+                        x: -1 * this.RADIUS,
+                        scaleX: 2,
+                        scaleY: 2
                     },
                     duration: 1
                 }).to(ball, {
@@ -109,6 +110,88 @@ export default {
 
                 container.addChild(oneLine)
             }
+
+            return container
+        },
+        drawShine () {
+            const container = new PIXI.Container()
+            container.x = 600
+            container.y = 300
+            container.pivot.x = this.RADIUS
+            container.pivot.y = this.RADIUS
+
+            container.interactive = true // 設定可以互動
+            container.buttonMode = true // 當滑鼠滑過時顯示為手指圖示
+
+            // cycle
+            const cycle = new PIXI.Graphics()
+            cycle.beginFill(0xCCCCCC)
+            cycle.drawCircle(this.RADIUS, this.RADIUS, this.RADIUS)
+            cycle.endFill()
+            container.addChild(cycle)
+
+            // BG
+            const bgOn = new PIXI.Sprite(radialBg({
+                colorArr: ['#95761C', '#E0D497', '#E6DFB2', '#FFFFF0'],
+                width: this.RADIUS * 2,
+                height: this.RADIUS * 2
+            }))
+            bgOn.visible = false
+            container.addChild(bgOn)
+
+            const bgOff = new PIXI.Sprite(radialBg({
+                colorArr: ['#111', '#555', '#AAA', '#CCC'],
+                width: this.RADIUS * 2,
+                height: this.RADIUS * 2
+            }))
+            container.addChild(bgOff)
+
+            // cycle mask
+            const mask = cycle.clone()
+            bgOn.mask = mask
+            bgOff.mask = mask
+            container.addChild(mask)
+
+            // 事件
+            container.on('pointerover', () => {
+                gsap.to(container, {
+                    pixi: {
+                        scaleX: 1.1,
+                        scaleY: 1.1
+                    },
+                    duration: 0.2
+                })
+            })
+            container.on('pointerout', () => {
+                gsap.to(container, {
+                    pixi: {
+                        scaleX: 1,
+                        scaleY: 1
+                    },
+                    duration: 0.2
+                })
+            })
+            container.on('pointerdown', () => {
+                console.log('click on')
+                this.lightOn = !this.lightOn
+
+                bgOn.visible = this.lightOn
+                bgOff.visible = !this.lightOn
+            })
+
+            container.on('pointerup', () => {
+                console.log('click off')
+            })
+
+            // 動態效果
+            // const tl = gsap.timeline({ repeat: -1, yoyo: true, ease: 'power2.out' })
+            // tl.to(container, {
+            //     pixi: {
+            //         scaleX: 1.2,
+            //         scaleY: 1.2
+            //     },
+            //     duration: 1
+            // })
 
             return container
         }
